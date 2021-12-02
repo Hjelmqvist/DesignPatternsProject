@@ -1,25 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerCharacter : Character
 {
-    [SerializeField] PlayerMovement _movement;
+    [Space]
+    [SerializeField] string _horizontalAxisName = "Horizontal";
+    [SerializeField] float _jumpForce = 1;
+    [SerializeField] string _jumpButtonName = "Jump";
 
-    Rigidbody2D _rb;
-    SpriteRenderer _renderer;
+    protected Rigidbody2D _rb;
 
-    private void Awake()
+    void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _renderer = GetComponent<SpriteRenderer>();
-
-        _movement.Setup( _rb, _renderer );
     }
 
-    private void Update()
+    protected override void Update()
     {
-        _movement.Execute();
+        base.Update();
+
+        // Jump in Update to check Input every frame
+        if (Input.GetButtonDown( _jumpButtonName ) && IsGrounded)
+            Jump();
+    }
+
+    private void FixedUpdate()
+    {
+        // Movement in FixedUpdate to prevent rubber banding with Physics stuff
+        float x = Input.GetAxisRaw( _horizontalAxisName );
+        Direction = x;
+        Move( x );
+    }
+
+    private void Jump()
+    {
+        _rb.AddForce( Vector2.up * _jumpForce, ForceMode2D.Impulse );
     }
 }
