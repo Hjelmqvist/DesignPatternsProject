@@ -3,16 +3,21 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerCharacter : Character
 {
+    public static PlayerCharacter Instance { get; private set; }
+
     [Space]
     [SerializeField] string _horizontalAxisName = "Horizontal";
-    [SerializeField] float _jumpForce = 1;
     [SerializeField] string _jumpButtonName = "Jump";
 
-    protected Rigidbody2D _rb;
-
-    void Awake()
+    private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
+        if (Instance == null || Instance.Equals( null ))
+        {
+            Instance = this;
+            DontDestroyOnLoad( gameObject );
+        }
+        else
+            Destroy( gameObject );
     }
 
     protected override void Update()
@@ -21,7 +26,7 @@ public class PlayerCharacter : Character
 
         // Jump in Update to check Input every frame
         if (Input.GetButtonDown( _jumpButtonName ) && IsGrounded)
-            Jump();
+            Jump();  
     }
 
     private void FixedUpdate()
@@ -30,10 +35,5 @@ public class PlayerCharacter : Character
         float x = Input.GetAxisRaw( _horizontalAxisName );
         Direction = x;
         Move( x );
-    }
-
-    private void Jump()
-    {
-        _rb.AddForce( Vector2.up * _jumpForce, ForceMode2D.Impulse );
     }
 }

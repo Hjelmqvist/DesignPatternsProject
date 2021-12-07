@@ -4,30 +4,32 @@ using UnityEngine.Events;
 [System.Serializable]
 public class Health
 {
-    [SerializeField] int _health;
-    int _currentHealth;
+    [SerializeField] int _health = 100;
+    [SerializeField] int _maxHealth;
 
-    [Space(20)]
+    public int CurrentHealth => _health;
+
+    [Space]
     public UnityEvent<HealthChangedArgs> OnHealthChanged;
-
-    public struct HealthChangedArgs
-    {
-        public readonly int CurrentHealth;
-        public readonly int PreviousHealth;
-
-        public HealthChangedArgs(int currentHealth, int previousHealth)
-        {
-            CurrentHealth = currentHealth;
-            PreviousHealth = previousHealth;
-        }
-    }
 
     public void ModifyHealth(int value)
     {
-        int previousHealth = _currentHealth;
-        _currentHealth = Mathf.Clamp( _currentHealth + value, 0, _health );
+        int previousHealth = _health;
+        _health = Mathf.Clamp( _health + value, 0, _maxHealth );
 
-        if (previousHealth != _currentHealth)
-            OnHealthChanged.Invoke( new HealthChangedArgs( _currentHealth, previousHealth ) );
+        if (previousHealth != _health)
+            OnHealthChanged.Invoke( new HealthChangedArgs( _health, previousHealth ) );
+    }
+}
+
+public struct HealthChangedArgs
+{
+    public readonly int CurrentHealth;
+    public readonly int PreviousHealth;
+
+    public HealthChangedArgs(int currentHealth, int previousHealth)
+    {
+        CurrentHealth = currentHealth;
+        PreviousHealth = previousHealth;
     }
 }
