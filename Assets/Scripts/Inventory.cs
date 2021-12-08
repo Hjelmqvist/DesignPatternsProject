@@ -1,37 +1,46 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class Inventory : MonoBehaviour
+public class Inventory
 {
-    [SerializeField] int _maxGold = 99;
+    public static Inventory Instance { get; private set; } = new Inventory();
+
+    const int MAX_GOLD = 99;
 
     int _currentGold;
-    Item _currentItem;
+    List<Item> _items = new List<Item>();
 
     public int Gold => _currentGold;
 
-    public UnityEvent<int> OnGoldChanged;
-    public UnityEvent<Item> OnItemChanged;
+    public static event Action<int> OnGoldChanged;
+    public static event Action<List<Item>, Item> OnItemAdded;
 
     public void ModifyGold(int amount)
     {
-        _currentGold = Mathf.Clamp( _currentGold + amount, 0, _maxGold );
+        _currentGold = Mathf.Clamp( _currentGold + amount, 0, MAX_GOLD );
         OnGoldChanged.Invoke( _currentGold );
     }
 
-    public void SetItem(Item item)
+    public void AddItem(Item item)
     {
-        _currentItem = item;
-        OnItemChanged.Invoke( item );
+        if (item != null)
+        {
+            _items.Add( item );
+            OnItemAdded.Invoke( _items, item );
+        } 
     }
 
-    public void UseCurrentItem()
+    public bool RemoveItem(Item item)
     {
-        if (_currentItem)
+        for (int i = 0; i < _items.Count; i++)
         {
-            _currentItem.UseItem();
-            _currentItem = null;
-            OnItemChanged.Invoke( null );
+            if (_items[i] == item)
+            {
+                _items.RemoveAt( i );
+                return true;
+            }
         }
+        return false;
     }
 }

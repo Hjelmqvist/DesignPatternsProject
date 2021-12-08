@@ -687,7 +687,6 @@ GameObject:
   - component: {fileID: 2129777767391930101}
   - component: {fileID: 2129777767391930102}
   - component: {fileID: 2129777767391930107}
-  - component: {fileID: 2129777767391930106}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -747,8 +746,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -567736689
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f0524514a165b6946a8692b2ffb82fd2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -877,34 +876,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundedBool: IsGrounded
   _movespeedFloat: Movespeed
---- !u!114 &2129777767391930106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2129777767391930098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2043a9bb1e1e0da4c95da8f40934cbfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxGold: 99
-  OnGoldChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2129777766663853044}
-        m_TargetAssemblyTypeName: GoldUI, Assembly-CSharp
-        m_MethodName: GoldChanged
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnItemChanged:
-    m_PersistentCalls:
-      m_Calls: []

@@ -8,24 +8,33 @@ public abstract class Character : MonoBehaviour
     [SerializeField] Vector2 _groundCheckOffset;
     [SerializeField] Vector2 _groundCheckSize;
 
-    public float Direction { get; protected set; }
+    public float Direction { get; private set; }
     public bool IsGrounded { get; private set; }
     public Health Health => _health;
     public Rigidbody2D RB { get; private set; }
 
+    protected virtual void Awake()
+    {
+        RB = GetComponent<Rigidbody2D>();
+    }
+
     protected virtual void Update()
     {
         IsGrounded = GroundedCheck();
-        RB = GetComponent<Rigidbody2D>();
     }
 
     public void Move(float direction)
     {
         if (Mathf.Approximately( direction, 0 ) == false)
         {
-            float positionChange = direction * _movementSpeed * Time.deltaTime;
-            transform.Translate( Vector2.right * positionChange );
+            Vector2 vel = RB.velocity;
+            vel.x = direction * _movementSpeed;
+            RB.velocity = vel;
+
+           // RB.velocity.Set( movement, RB.velocity.y );
+            Debug.Log( RB.velocity );
         }
+        Direction = direction;
     }
 
     public void Jump()

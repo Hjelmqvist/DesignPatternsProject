@@ -22,7 +22,8 @@ public class Checkpoint : Interactable
 
     public static void MovePlayerToCheckpoint()
     {
-        PlayerCharacter.Instance.RB.MovePosition( _checkpointPosition );
+        PlayerCharacter.Instance.RB.velocity.Set( 0, 0 );
+        PlayerCharacter.Instance.transform.position = _checkpointPosition;
     }
 
     protected override void Interact(PlayerCharacter player)

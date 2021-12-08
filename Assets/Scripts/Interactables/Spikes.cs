@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DeathZone : Interactable
+public class Spikes : Interactable
 {
     [SerializeField] int _damage = 1;
 

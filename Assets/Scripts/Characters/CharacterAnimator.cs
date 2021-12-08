@@ -5,6 +5,7 @@ public class CharacterAnimator : MonoBehaviour
 {
     [SerializeField] string _groundedBool = "IsGrounded";
     [SerializeField] string _movespeedFloat = "Movespeed";
+    [SerializeField] string _deathBool = "Dead";
 
     Animator _animator;
     Character _character;
@@ -26,5 +27,10 @@ public class CharacterAnimator : MonoBehaviour
 
         if (Mathf.Approximately(dir, 0) == false)
             _renderer.flipX = _character.Direction < 0;
+    }
+
+    public void OnCharacterDeath()
+    {
+        _animator.SetBool( _deathBool, true );
     }
 }
