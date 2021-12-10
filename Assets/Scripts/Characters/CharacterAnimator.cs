@@ -1,31 +1,30 @@
 using UnityEngine;
 
-[RequireComponent( typeof( Animator ), typeof(Character), typeof(SpriteRenderer))]
-public class CharacterAnimator : MonoBehaviour
+public class CharacterAnimator
 {
-    [SerializeField] string _groundedBool = "IsGrounded";
-    [SerializeField] string _movespeedFloat = "Movespeed";
-    [SerializeField] string _deathBool = "Dead";
+    const string _groundedBool = "IsGrounded";
+    const string _movespeedFloat = "Movespeed";
+    const string _deathBool = "Dead";
 
     Animator _animator;
     Character _character;
     SpriteRenderer _renderer;
 
-    private void Awake()
+    public CharacterAnimator(Animator animator, Character character, SpriteRenderer renderer)
     {
-        _animator = GetComponent<Animator>();
-        _character = GetComponent<Character>();
-        _renderer = GetComponent<SpriteRenderer>();
+        _animator = animator;
+        _character = character;
+        _renderer = renderer;
     }
 
-    private void Update()
+    public void OnUpdate()
     {
         float dir = _character.Direction;
 
         _animator.SetBool( _groundedBool, _character.IsGrounded );
-        _animator.SetFloat( _movespeedFloat, Mathf.Abs(dir) );
+        _animator.SetFloat( _movespeedFloat, Mathf.Abs( dir ) );
 
-        if (Mathf.Approximately(dir, 0) == false)
+        if (Mathf.Approximately( dir, 0 ) == false)
             _renderer.flipX = _character.Direction < 0;
     }
 

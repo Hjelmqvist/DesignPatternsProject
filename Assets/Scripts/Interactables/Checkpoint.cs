@@ -1,49 +1,29 @@
-using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class Checkpoint : Interactable
 {
-    [SerializeField] string _checkpointActiveString = "Active";
+    [SerializeField] Vector2 _respawnPointOffset;
+    [SerializeField] float _debugSphereRadius = 0.2f;
     Animator _animator;
 
-    public static Vector2 _checkpointPosition;
-    private static event Action<Checkpoint> OnCheckpointChanged;
+    private static Checkpoint _currentCheckpoint;
+    public Vector2 Position { get { return (Vector2)transform.position + _respawnPointOffset; } }
 
-    private void Awake()
+    public static Vector2 GetCheckpointPosition()
     {
-        _animator = GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
-        _checkpointPosition = PlayerCharacter.Instance.transform.position;
-    }
-
-    public static void MovePlayerToCheckpoint()
-    {
-        PlayerCharacter.Instance.RB.velocity.Set( 0, 0 );
-        PlayerCharacter.Instance.transform.position = _checkpointPosition;
+        return _currentCheckpoint != null
+             ? _currentCheckpoint.Position 
+             : Vector2.zero;
     }
 
     protected override void Interact(PlayerCharacter player)
     {
-        _checkpointPosition = player.transform.position;
-        OnCheckpointChanged?.Invoke( this );
+        _currentCheckpoint = this;
     }
 
-    private void OnEnable()
+    private void OnDrawGizmos()
     {
-        OnCheckpointChanged += Checkpoint_OnCheckpointChanged;
-    }
-
-    private void OnDisable()
-    {
-        OnCheckpointChanged -= Checkpoint_OnCheckpointChanged;
-    }
-
-    private void Checkpoint_OnCheckpointChanged(Checkpoint checkpoint)
-    {
-        _animator.SetBool( _checkpointActiveString, checkpoint == this );
+        Gizmos.color = _currentCheckpoint == this ? Color.green : Color.red;
+        Gizmos.DrawSphere( (Vector2)transform.position + _respawnPointOffset, _debugSphereRadius );
     }
 }

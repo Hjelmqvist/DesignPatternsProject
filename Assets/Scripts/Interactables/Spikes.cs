@@ -8,7 +8,5 @@ public class Spikes : Interactable
     {
         Health health = player.Health;
         health.ModifyHealth( -_damage );
-        if (health.CurrentHealth > 0)
-            Checkpoint.MovePlayerToCheckpoint();
     }
 }

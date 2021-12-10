@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
 public abstract class Character : MonoBehaviour
 {
     [SerializeField] Health _health;
@@ -8,6 +9,9 @@ public abstract class Character : MonoBehaviour
     [SerializeField] Vector2 _groundCheckOffset;
     [SerializeField] Vector2 _groundCheckSize;
 
+    CharacterAnimator _animator;
+
+    public bool IsAlive { get; private set; } = true;
     public float Direction { get; private set; }
     public bool IsGrounded { get; private set; }
     public Health Health => _health;
@@ -16,24 +20,20 @@ public abstract class Character : MonoBehaviour
     protected virtual void Awake()
     {
         RB = GetComponent<Rigidbody2D>();
+        _animator = new CharacterAnimator( GetComponent<Animator>(), this, GetComponent<SpriteRenderer>() );
     }
 
     protected virtual void Update()
     {
         IsGrounded = GroundedCheck();
+        _animator.OnUpdate();
     }
 
     public void Move(float direction)
     {
-        if (Mathf.Approximately( direction, 0 ) == false)
-        {
-            Vector2 vel = RB.velocity;
-            vel.x = direction * _movementSpeed;
-            RB.velocity = vel;
-
-           // RB.velocity.Set( movement, RB.velocity.y );
-            Debug.Log( RB.velocity );
-        }
+        Vector2 vel = RB.velocity;
+        vel.x = direction * _movementSpeed;
+        RB.velocity = vel;
         Direction = direction;
     }
 
@@ -46,6 +46,14 @@ public abstract class Character : MonoBehaviour
     {
         Vector2 point = (Vector2)transform.position + _groundCheckOffset;
         return Physics2D.BoxCastAll( point, _groundCheckSize, 0, Vector2.zero ).Length > 1;
+    }
+
+    public virtual void HealthChanged(HealthChangedArgs args)
+    {
+        bool dead = args.CurrentHealth <= 0;
+        IsAlive = !dead;
+        if (dead)
+            _animator.OnCharacterDeath();
     }
 
     protected virtual void OnDrawGizmosSelected()
